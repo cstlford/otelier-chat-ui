@@ -1,7 +1,7 @@
 import { UserState } from "@/types/BITypes";
 
 export async function getUserContext(url: string, token: string) {
-  const response = await fetch(`${url}/user/context`, {
+  const response = await fetch(`${url}/user/me`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

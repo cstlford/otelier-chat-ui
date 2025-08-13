@@ -1,5 +1,9 @@
-import { ChatModelAdapter } from "@assistant-ui/react";
+import {
+  ChatModelAdapter,
+  ThreadAssistantMessagePart,
+} from "@assistant-ui/react";
 import { ToolCall } from "@/types/BITypes";
+import notification from "../assets/notification.wav";
 
 export function createModelAdapter(
   url: string,
@@ -8,9 +12,9 @@ export function createModelAdapter(
   hotelIdsToSend: number[]
 ) {
   const ModelAdapter: ChatModelAdapter = {
-    async *run({ messages, abortSignal }) {
+    async *run({ messages, abortSignal, context }) {
       const threadId = "123";
-      const response = await fetch(`${url}/chat/stream`, {
+      const response = await fetch(`${url}/chatbot/stream`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,61 +37,60 @@ export function createModelAdapter(
         throw new Error("No body!");
       }
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
+      const reader = response.body
+        .pipeThrough(new TextDecoderStream())
+        .getReader();
+
       let text = "";
       let toolCalls = [];
+      let images: { type: "image"; image: string }[] = [];
+      let buffer = "";
+      let notified = false;
+
+      const notificationSound = new Audio(notification);
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        buffer += decoder
-          .decode(value, { stream: true })
-          .replace(/\r\n/g, "\n");
+        buffer += value.replace(/\r\n/g, "\n");
 
-        const events = buffer.split("\n\n");
-        buffer = events.pop() || "";
+        let sep;
+        while ((sep = buffer.indexOf("\n\n")) !== -1) {
+          const frame = buffer.slice(0, sep);
+          buffer = buffer.slice(sep + 2);
 
-        for (const event of events) {
-          if (!event.trim()) continue;
+          let eventType = "message";
+          const dataLines: string[] = [];
 
-          const lines = event.split("\n");
-          let eventType = "";
-          let data = "";
-
-          for (const line of lines) {
-            if (line.startsWith("event: ")) {
-              eventType = line.slice(7);
-            } else if (line.startsWith("data: ")) {
-              if (data) data += "\n";
-              data += line.slice(6);
-            }
+          for (const line of frame.split("\n")) {
+            if (line.startsWith("event:"))
+              eventType = line.slice("event:".length).trim();
+            else if (line.startsWith("data:"))
+              dataLines.push(line.slice("data:".length).trimStart());
           }
 
-          if (eventType && data) {
-            if (eventType === "message") {
-              const unescapedData = data.replace(/\\n/g, "\n");
-              text += unescapedData;
-              console.log("Accumulated text:", JSON.stringify(text));
-            } else if (eventType === "tool_calls") {
-              try {
-                toolCalls = JSON.parse(data);
-                console.log("Tool calls:", toolCalls);
-              } catch (e) {
-                console.error("Error parsing tool_calls data:", e);
-              }
-            } else if (eventType === "done") {
-              console.log("Stream done");
-            } else if (eventType === "error") {
-              console.error("Stream error:", data);
-            }
-          }
+          const data = dataLines.join("\n");
 
+          let hasNewContent = false;
+
+          if (eventType == "tool-calls") {
+            console.log("toool calls!", JSON.parse(data));
+            toolCalls = JSON.parse(data);
+          } else if (eventType === "message") {
+            text += data;
+            hasNewContent = !!data;
+          } else if (eventType === "images") {
+            const newImages: string[] = JSON.parse(data);
+            images = newImages.map((img) => ({
+              type: "image",
+              image: `data:image/png;base64,${img.replace(/\s+/g, "")}`,
+            }));
+            hasNewContent = images.length > 0;
+          }
           yield {
             content: [
-              ...(text ? [{ type: "text" as const, text: text }] : []),
+              { type: "text", text: text },
               ...toolCalls.map((tc: ToolCall) => ({
                 type: "tool-call",
                 toolCallId: tc.id,
@@ -95,123 +98,19 @@ export function createModelAdapter(
                 args: tc.args,
                 argsText: JSON.stringify(tc.args),
               })),
+              ...images,
             ],
           };
+          if (hasNewContent && !notified) {
+            notificationSound.play().catch((error) => {
+              console.error("Failed to play notification sound:", error);
+            });
+            notified = true;
+          }
         }
+        toolCalls = [];
       }
     },
   };
   return ModelAdapter;
 }
-
-// export function createModelAdapter(
-//   url: string,
-//   token: string,
-//   organizationId: string,
-//   hotelIdsToSend: number[]
-// ) {
-//   const ModelAdapter: ChatModelAdapter = {
-//     async *run({ messages, abortSignal }) {
-//       const threadId = "123";
-
-//       const response = await fetch(`${url}/chat/stream`, {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${token}`,
-//         },
-//         body: JSON.stringify({
-//           message: messages[messages.length - 1],
-//           organizationId,
-//           hotels: hotelIdsToSend,
-//           threadId,
-//         }),
-//         signal: abortSignal,
-//       });
-
-//       if (!response.ok) {
-//         throw new Error(`HTTP error! Status: ${response.status}`);
-//       }
-
-//       if (!response.body) {
-//         throw new Error("No body!");
-//       }
-
-//       const reader = response.body.getReader();
-//       const decoder = new TextDecoder();
-//       let buffer = "";
-//       let text = "";
-
-//       while (true) {
-//         const { done, value } = await reader.read();
-//         if (done) break;
-
-//         buffer += decoder
-//           .decode(value, { stream: true })
-//           .replace(/\r\n/g, "\n");
-
-//         const events = buffer.split("\n\n");
-//         buffer = events.pop() || "";
-
-//         for (const event of events) {
-//           if (!event.trim()) continue;
-
-//           console.log("Complete SSE event:", JSON.stringify(event));
-
-//           const lines = event.split("\n");
-//           let eventType = "";
-//           let data = "";
-
-//           for (const line of lines) {
-//             if (line.startsWith("event: ")) {
-//               eventType = line.slice(7);
-//             } else if (line.startsWith("data: ")) {
-//               if (data) data += "\n";
-//               data += line.slice(6);
-//             }
-//           }
-//           console.log(
-//             "Parsed eventType:",
-//             eventType,
-//             "Raw data:",
-//             JSON.stringify(data)
-//           );
-
-//           if (eventType && data) {
-//             if (eventType === "message") {
-//               const unescapedData = data.replace(/\\n/g, "\n");
-//               text += unescapedData;
-//               console.log("Accumulated text:", JSON.stringify(text));
-//               yield {
-//                 content: [{ type: "text", text }],
-//               };
-//             } else if (eventType === "tool_calls") {
-//               try {
-//                 const toolCalls = JSON.parse(data);
-//                 console.log("Tool calls:", toolCalls);
-//                 yield {
-//                   content: [
-//                     ...toolCalls.map((tc: ToolCall) => ({
-//                       type: "tool-call",
-//                       toolCallId: tc.id,
-//                       toolName: tc.name,
-//                       args: tc.args,
-//                       argsText: JSON.stringify(tc.args),
-//                     })),
-//                   ],
-//                 };
-//               } catch (e) {
-//                 console.error("Error parsing tool_calls data:", e);
-//               }
-//             } else if (eventType === "done") {
-//               console.log("Stream done");
-//             } else if (eventType === "error") {
-//               console.error("Stream error:", data);
-//             }
-//           }
-//         }
-//       }
-//     },
-//   };
-//   return ModelAdapter;
-// }

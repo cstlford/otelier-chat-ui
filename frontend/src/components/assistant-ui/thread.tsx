@@ -92,7 +92,7 @@ const ThreadWelcomeSuggestions: FC = () => {
   return (
     <div className="my-3 flex w-full items-stretch justify-center gap-4">
       <ThreadPrimitive.Suggestion
-        className="hover:bg-white/80 cursor-pointer shadow-lg hover:text-neutral-900 text-white bg-[rgb(255,255,255,.3)] flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg p-3 ease-in"
+        className="hover:bg-[#6aa0de64] cursor-pointer shadow-lg text-white bg-[rgb(255,255,255,.3)] flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg p-3 ease-in"
         prompt="What metrics are most strongly related to occupancy?"
         method="replace"
         autoSend
@@ -102,7 +102,7 @@ const ThreadWelcomeSuggestions: FC = () => {
         </span>
       </ThreadPrimitive.Suggestion>
       <ThreadPrimitive.Suggestion
-        className="hover:bg-white/80 cursor-pointer shadow-lg hover:text-neutral-900 text-white bg-[rgb(255,255,255,.3)] flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg p-3 ease-in"
+        className="hover:bg-[#6aa0de64] cursor-pointer shadow-lg text-white bg-[rgb(255,255,255,.3)] flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg p-3 ease-in"
         prompt="Why did labor costs spike unexpectedly this month?"
         method="replace"
         autoSend
@@ -210,7 +210,7 @@ const AssistantMessage: FC = () => {
   return (
     <MessagePrimitive.Root className="w-full max-w-[var(--thread-max-width)] py-4 flex flex-col">
       <div className="flex flex-col items-start w-full">
-        <div className="text-foreground bg-[rgb(255,255,255,.85)] max-w-[calc(var(--thread-max-width)*0.8)] break-words rounded-3xl rounded-bl-[4px] px-5 py-2.5 leading-7">
+        <div className="text-foreground bg-[rgb(255,255,255,.95)] max-w-[calc(var(--thread-max-width)*0.8)] break-words rounded-3xl rounded-bl-[4px] px-5 py-2.5 leading-7">
           <MessagePrimitive.Content
             components={{
               Text: MarkdownText,
