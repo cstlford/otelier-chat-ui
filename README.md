@@ -1,14 +1,20 @@
 ### Frontend
 
-1. Open a terminal and navigate to the `frontend` directory:
-   ```bash
-   cd frontend
-   ```
-2. Install the required dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the Storybook server:
-   ```bash
-   npm run storybook
-   ```
+Clone the repository:
+
+```bash
+git clone git@bitbucket.org:bitbucketmdo/char-react-chat-components.git
+cd path/to/char-react-chat-components
+```
+
+Install the required dependencies:
+
+```bash
+npm install
+```
+
+Start the Storybook server:
+
+```bash
+npm run storybook
+```
