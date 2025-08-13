@@ -87,6 +87,9 @@ export function createModelAdapter(
               image: `data:image/png;base64,${img.replace(/\s+/g, "")}`,
             }));
             hasNewContent = images.length > 0;
+          } else if (eventType === "error") {
+            console.error("Server error:", JSON.parse(data).message);
+            throw new Error(JSON.parse(data).message);
           }
           yield {
             content: [
@@ -107,8 +110,8 @@ export function createModelAdapter(
             });
             notified = true;
           }
+          toolCalls = [];
         }
-        toolCalls = [];
       }
     },
   };
