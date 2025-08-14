@@ -27,7 +27,7 @@ export const UserStateProvider = ({
   children: React.ReactNode;
   initialOrganizationId?: string | null;
   initialHotels?: Hotel[];
-  initialSelectedHotelIds?: number[];
+  initialSelectedHotelIds?: Hotel[];
 }) => {
   const [state, dispatch] = useReducer(reducer, {
     organizationId: initialOrganizationId,

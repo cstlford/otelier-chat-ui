@@ -44,10 +44,7 @@ const ChatInterface = ({ onClose }: { onClose: () => void }) => {
 
   const { organizationId, selectedHotelIds, hotels } = useUserState();
 
-  let hotelIdsToSend =
-    selectedHotelIds.length > 0
-      ? selectedHotelIds
-      : hotels.map((hotel) => hotel.id);
+  let hotelIdsToSend = selectedHotelIds.length > 0 ? selectedHotelIds : hotels;
 
   const ModelAdapter: ChatModelAdapter = createModelAdapter(
     url,

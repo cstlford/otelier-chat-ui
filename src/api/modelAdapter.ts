@@ -2,14 +2,14 @@ import {
   ChatModelAdapter,
   ThreadAssistantMessagePart,
 } from "@assistant-ui/react";
-import { ToolCall } from "@/types/BITypes";
+import { Hotel, ToolCall } from "@/types/BITypes";
 import notification from "../assets/notification.wav";
 
 export function createModelAdapter(
   url: string,
   token: string,
   organizationId: string,
-  hotelIdsToSend: number[]
+  hotelIdsToSend: Hotel[]
 ) {
   const ModelAdapter: ChatModelAdapter = {
     async *run({ messages, abortSignal, context }) {
@@ -75,7 +75,6 @@ export function createModelAdapter(
           let hasNewContent = false;
 
           if (eventType == "tool-calls") {
-            console.log("toool calls!", JSON.parse(data));
             toolCalls = JSON.parse(data);
           } else if (eventType === "message") {
             text += data;

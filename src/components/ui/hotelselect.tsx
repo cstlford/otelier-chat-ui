@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { Check, ChevronsUpDown, Hotel } from "lucide-react";
+import { Check, Hotel as HotelIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -18,13 +17,14 @@ import {
   CommandItem,
   CommandList,
 } from "./command";
+import { Hotel } from "@/types/BITypes";
 
 export function HotelSelect() {
   const { hotels, dispatch } = useUserState();
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<number[]>([]);
+  const [selected, setSelected] = useState<Hotel[]>([]);
 
-  const toggleValue = (currentValue: number) => {
+  const toggleValue = (currentValue: Hotel) => {
     setSelected((prev) => {
       if (prev.includes(currentValue)) {
         return prev.filter((value) => value !== currentValue);
@@ -47,12 +47,12 @@ export function HotelSelect() {
           aria-expanded={open}
           className="size-8 text-white"
         >
-          <Hotel />
+          <HotelIcon />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0 bg-white rounded-xl shadow-lg border border-[#397FA0]/30">
         <div className="flex items-center gap-2 px-3 py-2">
-          <Hotel className="size-5 text-[#397FA0]" />
+          <HotelIcon className="size-5 text-[#397FA0]" />
           <h3 className="text-md font-semibold text-[#397FA0]">
             Select Hotels
           </h3>
@@ -67,11 +67,11 @@ export function HotelSelect() {
                   key={hotel.id}
                   value={hotel.name}
                   onSelect={() => {
-                    toggleValue(hotel.id);
+                    toggleValue(hotel);
                   }}
                 >
                   {hotel.name}
-                  {selected.includes(hotel.id) && (
+                  {selected.includes(hotel) && (
                     <Check className="text-[#985db5]" />
                   )}
                 </CommandItem>
