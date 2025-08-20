@@ -1,0 +1,221 @@
+.msgContainer {
+  display: grid;
+}
+
+.msg {
+  border-radius: 24px;
+  padding: 10px 20px;
+  max-width: 90%;
+  width: fit-content;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.user {
+  background: rgb(255, 255, 255, 0.3);
+  color: white;
+  border-bottom-right-radius: 4px;
+  margin-left: auto;
+}
+
+.assistant {
+  background: rgb(255, 255, 255, 0.95);
+  color: #191919;
+  border-bottom-left-radius: 4px;
+}
+
+/* Image Container and Download Button */
+.imageContainer {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.imageContainer:hover .downloadButton {
+  opacity: 1;
+}
+
+.img {
+  max-width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
+.downloadButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  backdrop-filter: blur(4px);
+  z-index: 10;
+}
+
+.downloadButton:hover {
+  background: rgba(0, 0, 0, 0.9);
+  opacity: 1;
+}
+
+/* Table Toolbar with Download Button */
+.tableToolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e5e9;
+  border-radius: 8px 8px 0 0;
+}
+
+.tableToolbar .downloadButton {
+  position: static;
+  opacity: 1;
+  background: #007bff;
+  color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.tableToolbar .downloadButton:hover {
+  background: #0056b3;
+}
+
+.mermaid {
+  display: flex;
+  justify-content: center;
+  margin: 1em 0;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Table Styles */
+.tableWrapper {
+  overflow-x: auto;
+  margin: 1em 0;
+  border-radius: 8px;
+  border: 1px solid #e1e5e9;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  background: white;
+}
+
+.tableHead {
+  background: #f8f9fa;
+}
+
+.tableRow {
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableHeader {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.tableCell {
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: top;
+  border-right: 1px solid #e1e5e9;
+}
+
+.tableCell:last-child {
+  border-right: none;
+}
+
+/* List Styles */
+.list,
+.orderedList {
+  margin: 1em 0;
+  padding-left: 1.5em;
+}
+
+.listItem {
+  margin: 0.5em 0;
+  line-height: 1.6;
+  padding-left: 0.5em;
+}
+
+.list li {
+  margin: 0.5em 0;
+  line-height: 1.6;
+  padding-left: 0.5em;
+}
+
+.orderedList li {
+  margin: 0.5em 0;
+  line-height: 1.6;
+  padding-left: 0.5em;
+}
+
+/* Nested lists */
+.list ul,
+.list ol,
+.orderedList ul,
+.orderedList ol {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+/* Assistant message specific list styling */
+.assistant .list,
+.assistant .orderedList {
+  color: #191919;
+}
+
+.assistant .listItem {
+  color: #191919;
+}
+
+/* User message specific list styling */
+.user .list,
+.user .orderedList {
+  color: white;
+}
+
+.user .listItem {
+  color: white;
+}
+
+.typingDots {
+  display: inline-block;
+  margin-left: 4px;
+}
+
+.typingDots::before {
+  content: "...";
+  animation: typingPulse 1.4s infinite ease-in-out;
+}
+
+@keyframes typingPulse {
+  0%,
+  80%,
+  100% {
+    opacity: 0.4;
+  }
+  40% {
+    opacity: 1;
+  }
+}

@@ -10,12 +10,8 @@
     "strict": true,
     "skipLibCheck": true,
     "noEmitOnError": true,
-    "jsx": "react-jsx",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": ["src", ".storybook"],
   "exclude": ["node_modules", "dist"]
 }

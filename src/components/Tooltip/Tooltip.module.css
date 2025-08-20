@@ -1,0 +1,30 @@
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.content {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #985db5;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.pointer {
+  position: absolute;
+  top: 98%;
+  left: 50%;
+  margin-left: -6px;
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: #985db5 transparent transparent transparent;
+}

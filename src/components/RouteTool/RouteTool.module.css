@@ -1,0 +1,131 @@
+/* RouteTool.module.css */
+
+.container {
+  margin-bottom: 1rem;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(to right, #f3e8ff, #dbeafe);
+  padding: 1rem;
+  border: 1px solid #d8b4fe;
+  animation: slideIn 300ms ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background-color: #e9d5ff;
+}
+
+.iconWrapper {
+  width: 1rem;
+  height: 1rem;
+  position: relative;
+}
+
+.spinnerRing {
+  position: absolute;
+  inset: 0;
+  border: 2px solid #9333ea;
+  border-right-color: transparent;
+  border-radius: 9999px;
+  animation: spin 1s linear infinite;
+}
+
+.spinnerCenter {
+  position: absolute;
+  inset: 4px;
+  background-color: #9333ea;
+  border-radius: 9999px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.content {
+  flex: 1;
+}
+
+.mainText {
+  color: #6b21a8;
+  font-weight: 500;
+}
+
+.routeLabel {
+  color: #9333ea;
+}
+
+.destination {
+  font-weight: 600;
+  color: #581c87;
+}
+
+.message {
+  font-size: 0.875rem;
+  color: #9333ea;
+  margin-top: 0.25rem;
+  opacity: 0.8;
+}
+
+.arrowContainer {
+  color: #9333ea;
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.dot1 {
+  background-color: #c084fc;
+  animation-delay: 0ms;
+}
+
+.dot2 {
+  background-color: #a855f7;
+  animation-delay: 150ms;
+}
+
+.dot3 {
+  background-color: #9333ea;
+  animation-delay: 300ms;
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}

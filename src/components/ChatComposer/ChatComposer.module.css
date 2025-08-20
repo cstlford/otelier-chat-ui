@@ -1,0 +1,63 @@
+.chatInputArea {
+  width: 100%;
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.3);
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+.chatInput {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.3);
+  transition: background 200ms ease, box-shadow 200ms ease,
+    backdrop-filter 200ms ease;
+}
+
+.chatInput:focus-within {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  outline: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.textarea {
+  flex-grow: 1;
+  min-width: 160px;
+  min-height: 20px;
+  max-height: 120px; /* Limits to about 6 lines */
+  border: none;
+  background: transparent;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  resize: none;
+  overflow-y: auto;
+  line-height: 1.4;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.textarea::placeholder {
+  color: #909090;
+}
+
+.textarea::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.chatInput[data-streaming="true"] {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}

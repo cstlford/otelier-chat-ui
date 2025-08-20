@@ -1,0 +1,54 @@
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+  border: none;
+  border-radius: 20%;
+  cursor: pointer;
+}
+
+.sm {
+  height: 30px;
+  width: 30px;
+}
+
+.md {
+  height: 36px;
+  width: 36px;
+}
+
+.lg {
+  height: 40px;
+  width: 40px;
+}
+
+.purpleBlue {
+  background: linear-gradient(45deg, #397fa0, #985db5);
+}
+
+.purplePink {
+  background: linear-gradient(45deg, #a03960, #985db5);
+}
+
+.semiTransparent {
+  background: rgb(255, 255, 255, 0.3);
+}
+
+.neutral {
+  background: linear-gradient(135deg, #64748b, #475569);
+}
+
+.btn:hover {
+  opacity: 70%;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}

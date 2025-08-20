@@ -1,0 +1,124 @@
+.selector {
+  position: relative;
+  display: inline-block;
+}
+
+.popup {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 4px;
+  width: 250px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(16, 24, 40, 0.12);
+  z-index: 50;
+  animation: popupOpen 0.2s ease-out forwards;
+  transform-origin: bottom;
+}
+
+.popup.closing {
+  animation: popupClose 0.15s ease-in forwards;
+}
+
+.top {
+  border-bottom: 1px solid #475569;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  color: #475569;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 10px 4px 10px;
+}
+
+.header h4 {
+  font-weight: 600;
+}
+
+.searchContainer {
+  position: relative;
+  padding: 4px;
+}
+
+.searchContainer input {
+  width: 100%;
+  padding: 2px 2px 2px 28px;
+  transition: all 0.2s ease;
+  outline: none;
+  border: none;
+}
+
+.searchContainer input::placeholder {
+  color: #9ca3af;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 8px;
+  top: 3px;
+  width: 16px;
+  color: #6b7280;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hotelList {
+  padding: 4px;
+  color: #374151; /* Warm dark grey */
+  background: rgba(148, 163, 184, 0.1);
+  overflow-y: scroll;
+  min-height: 100px;
+  max-height: 300px;
+  border-radius: 0 0 12px 12px;
+}
+
+.hotelItem {
+  list-style: none;
+  padding: 6px 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hotelItem:hover {
+  background: rgba(100, 116, 139, 0.12); /* Slate-based hover */
+  color: #1f2937;
+}
+
+.hotelItem.selected {
+  color: #1f2937;
+}
+
+.empty {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes popupOpen {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes popupClose {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+}
