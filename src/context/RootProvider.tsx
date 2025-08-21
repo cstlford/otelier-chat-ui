@@ -4,7 +4,10 @@ import { ChatProvider } from "./ChatContext";
 import { HotelProvider } from "./HotelContext";
 import { ErrorProvider } from "./ErrorContext";
 
-export type Application = "intellisight" | "tpx";
+export type Application = {
+  name: string;
+  description: string;
+};
 
 interface RootProviderProps {
   children: ReactNode;

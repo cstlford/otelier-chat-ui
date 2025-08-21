@@ -22,7 +22,6 @@ export default function ChatInterface({ onClose }: { onClose: () => void }) {
     messages,
     loading,
     error,
-    threadId,
     url,
     jwt,
     toolCalls,
@@ -45,6 +44,7 @@ export default function ChatInterface({ onClose }: { onClose: () => void }) {
         type: "SET_HOTELS",
         payload: hotelData.hotels,
       });
+      hotelDispatch({ type: "CLEAR_SELECTED_HOTELS" });
     }
   }, [hotelData, hotelDispatch]);
 

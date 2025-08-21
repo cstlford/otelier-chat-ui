@@ -98,6 +98,16 @@ export default function Message({
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeSanitize]}
           components={{
+            a: ({ href, children, ...props }) => (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                {...props}
+              >
+                {children}
+              </a>
+            ),
             img: ({ src, alt }) => (
               <div className={styles.imageContainer}>
                 <img className={styles.img} src={src} alt={alt} />
@@ -117,7 +127,7 @@ export default function Message({
                     className={styles.downloadButton}
                     onClick={(e) => {
                       const tableElement = e.currentTarget
-                        .closest(".tableWrapper")
+                        .closest(`.${styles.tableWrapper}`)
                         ?.querySelector("table") as HTMLTableElement;
                       if (tableElement) {
                         downloadTableAsCSV(

@@ -15,7 +15,10 @@ export async function stream(
   message: ChatMessage,
   selectedHotels: Hotel[],
   organizationId: string,
-  application: "intellisight" | "tpx",
+  application: {
+    name: string;
+    description: string;
+  },
   threadId: string | undefined,
   jwt: string,
   signal?: AbortSignal,

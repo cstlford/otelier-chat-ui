@@ -4,6 +4,7 @@ import bot from "../../assets/bot.svg";
 import hoverBot from "../../assets/bot-hover.svg";
 import closeBot from "../../assets/bot-close.svg";
 import ChatInterface from "../ChatInterface";
+
 export default function ChatToggle() {
   const [isHovered, setIsHovered] = useState(false);
   const [isOpen, setIsOpen] = useState(false);

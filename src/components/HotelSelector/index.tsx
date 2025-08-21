@@ -23,6 +23,9 @@ export default function HotelSelector() {
     return hotels.filter((h) => h.name.toLowerCase().includes(q));
   }, [hotels, query]);
 
+  const allSelected = selectedHotels.length === hotels.length;
+  const hasSelection = selectedHotels.length > 0;
+
   // click outside
   useEffect(() => {
     const onDoc = (e: MouseEvent) => {
@@ -42,6 +45,10 @@ export default function HotelSelector() {
 
   const toggleHotels = (hotel: any) => {
     dispatch({ type: "TOGGLE_HOTEL", payload: hotel });
+  };
+
+  const handleSelectAll = () => {
+    dispatch({ type: "SELECT_ALL_HOTELS" });
   };
 
   const handleToggle = () => {
@@ -73,7 +80,7 @@ export default function HotelSelector() {
           <div className={styles.top}>
             <div className={styles.header}>
               <HotelIcon size={20} />
-              <h4>Select Hotels</h4>
+              <h3>Select Hotels</h3>
             </div>
             <div className={styles.searchContainer}>
               <input
@@ -85,6 +92,27 @@ export default function HotelSelector() {
               />
               <Search className={styles.searchIcon} />
             </div>
+            {hotels.length > 0 && (
+              <div className={styles.selectionCountContainer}>
+                <div className={styles.selectAllCheckbox}>
+                  <input
+                    type="checkbox"
+                    id="select-all"
+                    checked={allSelected}
+                    onChange={handleSelectAll}
+                    className={styles.checkbox}
+                  />
+                  <label htmlFor="select-all" className={styles.checkboxLabel}>
+                    {allSelected ? "Deselect All" : "Select All"}
+                  </label>
+                </div>
+                {hasSelection && (
+                  <span className={styles.selectionCount}>
+                    {selectedHotels.length} selected
+                  </span>
+                )}
+              </div>
+            )}
           </div>
           <div className={styles.hotelList}>
             {filtered.length === 0 ? (

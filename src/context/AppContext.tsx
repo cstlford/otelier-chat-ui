@@ -1,6 +1,9 @@
 import { createContext, useContext, ReactNode } from "react";
 
-export type Application = "intellisight" | "tpx";
+export type Application = {
+  name: string;
+  description: string;
+};
 
 export type AppConfig = {
   url: string;

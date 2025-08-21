@@ -1,7 +1,5 @@
-/* RouteTool.module.css */
 
 .container {
-  margin-bottom: 1rem;
   display: flex;
   width: 100%;
   align-items: center;
@@ -11,17 +9,6 @@
   padding: 1rem;
   border: 1px solid #d8b4fe;
   animation: slideIn 300ms ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }
 
 .iconContainer {
@@ -127,5 +114,17 @@
   }
   40% {
     transform: scale(1);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }

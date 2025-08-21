@@ -12,7 +12,10 @@ export default function Otelia({
   jwt,
 }: {
   url: string;
-  application: "intellisight" | "tpx";
+  application: {
+    name: string;
+    description: string;
+  };
   organizationId: string;
   jwt: string;
 }) {

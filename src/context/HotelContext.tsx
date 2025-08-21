@@ -14,7 +14,8 @@ export type HotelAction =
   | { type: "SET_HOTELS"; payload: Hotel[] }
   | { type: "SET_SELECTED_HOTELS"; payload: Hotel[] }
   | { type: "TOGGLE_HOTEL"; payload: Hotel }
-  | { type: "CLEAR_SELECTED_HOTELS" };
+  | { type: "CLEAR_SELECTED_HOTELS" }
+  | { type: "SELECT_ALL_HOTELS" };
 
 interface HotelContextType {
   state: HotelState;
@@ -45,6 +46,12 @@ const hotelReducer = (state: HotelState, action: HotelAction): HotelState => {
       }
     case "CLEAR_SELECTED_HOTELS":
       return { ...state, selectedHotels: [] };
+    case "SELECT_ALL_HOTELS":
+      const allSelected = state.selectedHotels.length === state.hotels.length;
+      return {
+        ...state,
+        selectedHotels: allSelected ? [] : [...state.hotels],
+      };
     default:
       throw new Error(`Unhandled hotel action type: ${(action as any).type}`);
   }

@@ -14,7 +14,11 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     url: "http://localhost:8002/api",
-    application: "intellisight",
+    application: {
+      name: "intellisight",
+      description:
+        "Centralize data across your hospitality enterprise and rely on automated reports and dynamic visualizations to help you run a smarter hospitality business.",
+    },
     organizationId: "example-org-123",
     jwt: "example-jwt-token",
   },
