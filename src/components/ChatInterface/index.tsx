@@ -24,7 +24,7 @@ export default function ChatInterface({ onClose }: { onClose: () => void }) {
     error,
     url,
     jwt,
-    toolCalls,
+    route,
     organizationId,
     chatDispatch,
     hotelDispatch,
@@ -116,7 +116,7 @@ export default function ChatInterface({ onClose }: { onClose: () => void }) {
                       }
                       isLastMessage={index === messages.length - 1}
                       loading={loading}
-                      toolCalls={index === messages.length - 1 ? toolCalls : []}
+                      route={index === messages.length - 1 ? route : null}
                     />
                   ))}
                   {error && <ChatError error={error} />}

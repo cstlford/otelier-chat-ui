@@ -1,9 +1,8 @@
 import styles from "./RouteTool.module.css";
-export default function RouteTool({
-  args,
-}: {
-  args: { destination?: string; route?: string; message?: string };
-}) {
+import type { Route } from "../../context/ChatContext";
+export default function RouteTool({ route }: { route: Route }) {
+  console.log("destination: " + route.destination);
+  console.log("message: " + route.message);
   return (
     <div className={styles.container}>
       {/* Animated routing icon */}
@@ -19,11 +18,11 @@ export default function RouteTool({
         <p className={styles.mainText}>
           <span className={styles.routeLabel}>Routing to:</span>{" "}
           <span className={styles.destination}>
-            {String(args?.destination || args?.route || "destination")}
+            {String(route.destination || "destination")}
           </span>
         </p>
-        {args?.message && (
-          <p className={styles.message}>{String(args.message)}</p>
+        {route?.message && (
+          <p className={styles.message}>{String(route.message)}</p>
         )}
       </div>
 

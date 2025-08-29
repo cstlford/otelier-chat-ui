@@ -6,15 +6,15 @@ import rehypeSanitize from "rehype-sanitize";
 import MermaidDiagram from "../Mermaid";
 import { Download } from "lucide-react";
 
-import { useChat } from "../../context/ChatContext";
+import { Route, useChat } from "../../context/ChatContext";
 import RouteTool from "../RouteTool";
-import { ChatMessage, ToolCall } from "../../context/ChatContext";
+import { ChatMessage } from "../../context/ChatContext";
 import { formatAsciiTable } from "../../lib/formatting";
 import styles from "./Message.module.css";
 
 type Props = {
   message: ChatMessage;
-  toolCalls?: ToolCall[];
+  route: Route | null;
   isLastMessage?: boolean;
   loading?: boolean;
 };
@@ -71,20 +71,20 @@ const downloadImage = (imageUrl: string, filename?: string) => {
 
 export default function Message({
   message,
-  toolCalls: propToolCalls,
+  route: propRoute,
   isLastMessage = false,
   loading: propLoading = false,
 }: Props) {
   const {
-    state: { messages, toolCalls: contextToolCalls, loading: contextLoading },
+    state: { messages, route: contextRoute, loading: contextLoading },
   } = useChat();
 
-  const toolCalls = propToolCalls ?? contextToolCalls;
+  const route = propRoute ?? contextRoute;
   const loading = propLoading ?? contextLoading;
 
   const isLast = isLastMessage || messages[messages.length - 1] === message;
 
-  if (!loading && !message.text && (!toolCalls || toolCalls.length === 0)) {
+  if (!loading && !message.text && !route) {
     return null;
   }
 
@@ -192,12 +192,10 @@ export default function Message({
         >
           {formattedText}
         </ReactMarkdown>
-        {isLast && loading && toolCalls.length === 0 && (
+        {isLast && loading && !route && (
           <span className={styles.typingDots} aria-live="polite"></span>
         )}
-        {isLast &&
-          toolCalls.length > 0 &&
-          toolCalls.map((tc) => <RouteTool key={tc.id} args={tc.args} />)}
+        {isLast && route && <RouteTool route={route} />}
       </div>
     </div>
   );

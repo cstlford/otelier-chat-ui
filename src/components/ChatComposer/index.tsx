@@ -51,9 +51,16 @@ export default function ChatComposer() {
               },
             });
             break;
-          case "tool-calls":
-            chatDispatch({ type: "SET_TOOL_CALLS", payload: JSON.parse(data) });
-            // Don't set loading to false here - the stream might continue with more text
+          case "route":
+            try {
+              chatDispatch({
+                type: "SET_ROUTE",
+                payload: JSON.parse(data),
+              });
+            } catch (e) {
+              console.error("Failed to parse route payload", e, data);
+            }
+
             break;
           case "done":
             chatDispatch({ type: "SET_THREAD_ID", payload: data });
@@ -105,7 +112,7 @@ export default function ChatComposer() {
         }
       } finally {
         controllerRef.current = null;
-        chatDispatch({ type: "CLEAR_TOOL_CALLS" });
+        chatDispatch({ type: "CLEAR_ROUTE" });
         chatDispatch({ type: "SET_LOADING", payload: false });
       }
     },

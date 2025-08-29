@@ -14,10 +14,15 @@ export type ToolCall = {
   type: string;
 };
 
+export type Route = {
+  destination: string;
+  message: string;
+};
+
 export type ChatState = {
   messages: ChatMessage[];
   threadId: string | null;
-  toolCalls: ToolCall[];
+  route: Route | null;
   loading: boolean;
   error?: string;
 };
@@ -31,8 +36,8 @@ export type ChatAction =
   | { type: "SET_THREAD_ID"; payload: string }
   | { type: "CLEAR_THREAD_ID" }
   | { type: "SET_LOADING"; payload: boolean }
-  | { type: "SET_TOOL_CALLS"; payload: ToolCall[] }
-  | { type: "CLEAR_TOOL_CALLS" };
+  | { type: "SET_ROUTE"; payload: Route }
+  | { type: "CLEAR_ROUTE" };
 
 interface ChatContextType {
   state: ChatState;
@@ -76,10 +81,10 @@ const chatReducer = (state: ChatState, action: ChatAction): ChatState => {
       return { ...state, threadId: null };
     case "SET_LOADING":
       return { ...state, loading: action.payload };
-    case "SET_TOOL_CALLS":
-      return { ...state, toolCalls: action.payload };
-    case "CLEAR_TOOL_CALLS":
-      return { ...state, toolCalls: [] };
+    case "SET_ROUTE":
+      return { ...state, route: action.payload };
+    case "CLEAR_ROUTE":
+      return { ...state, route: null };
     default:
       throw new Error(`Unhandled chat action type: ${(action as any).type}`);
   }
@@ -99,7 +104,7 @@ export const ChatProvider = ({
   const [state, dispatch] = useReducer(chatReducer, {
     messages: initialMessages,
     threadId: initialThreadId,
-    toolCalls: initialToolCalls,
+    route: null,
     loading: false,
   });
 
