@@ -8,7 +8,7 @@ export type Application = {
 export type AppConfig = {
   url: string;
   application: Application;
-  organizationId: string;
+  organizationId: number;
   jwt: string;
 };
 
@@ -28,7 +28,7 @@ export const AppProvider = ({
   children: ReactNode;
   url: string;
   application: Application;
-  organizationId: string;
+  organizationId: number;
   jwt: string;
 }) => {
   const config: AppConfig = {

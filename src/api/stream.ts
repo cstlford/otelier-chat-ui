@@ -14,7 +14,7 @@ export async function stream(
   url: string,
   message: ChatMessage,
   selectedHotels: Hotel[],
-  organizationId: string,
+  organizationId: number,
   application: {
     name: string;
     description: string;

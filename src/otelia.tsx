@@ -16,7 +16,7 @@ export default function Otelia({
     name: string;
     description: string;
   };
-  organizationId: string;
+  organizationId: number;
   jwt: string;
 }) {
   return (

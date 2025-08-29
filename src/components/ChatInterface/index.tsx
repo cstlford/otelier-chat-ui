@@ -25,6 +25,7 @@ export default function ChatInterface({ onClose }: { onClose: () => void }) {
     url,
     jwt,
     toolCalls,
+    organizationId,
     chatDispatch,
     hotelDispatch,
   } = useAppState();
@@ -35,7 +36,7 @@ export default function ChatInterface({ onClose }: { onClose: () => void }) {
     isLoading,
   } = useQuery({
     queryKey: ["getUser"],
-    queryFn: () => getUser(url, jwt),
+    queryFn: () => getUser(url, organizationId, jwt),
   });
 
   useEffect(() => {
@@ -88,7 +89,7 @@ export default function ChatInterface({ onClose }: { onClose: () => void }) {
               className={`${styles.status} ${isLoading ? styles.loading : ""}`}
             ></div>
           </div>
-          <h3>Otelia</h3>
+          <h3>Othelia</h3>
           <Tooltip content="New chat">
             <CircleButton
               variant="semiTransparent"

@@ -1,8 +1,12 @@
 import { normalizeError } from "../lib/errors";
 
-export async function getUser(url: string, jwt: string) {
+export async function getUser(
+  url: string,
+  organizationId: number,
+  jwt: string
+) {
   try {
-    const response = await fetch(`${url}/user/me`, {
+    const response = await fetch(`${url}/user/${organizationId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

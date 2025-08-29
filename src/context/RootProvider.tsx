@@ -13,7 +13,7 @@ interface RootProviderProps {
   children: ReactNode;
   url: string;
   application: Application;
-  organizationId: string;
+  organizationId: number;
   jwt: string;
 }
 
