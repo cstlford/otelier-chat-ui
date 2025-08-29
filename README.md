@@ -18,3 +18,13 @@ Start the Storybook server:
 ```bash
 npm run storybook
 ```
+
+## Scripts
+
+- `npm start` — Run the development server
+- `npm run build` — Build for production
+- `npm run storybook` — Launch Storybook for component development
+
+## License
+
+MIT
