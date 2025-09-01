@@ -22,6 +22,7 @@ export type Route = {
 export type ChatState = {
   messages: ChatMessage[];
   threadId: string | null;
+  database: string | null;
   route: Route | null;
   loading: boolean;
   error?: string;
@@ -37,7 +38,9 @@ export type ChatAction =
   | { type: "CLEAR_THREAD_ID" }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ROUTE"; payload: Route }
-  | { type: "CLEAR_ROUTE" };
+  | { type: "CLEAR_ROUTE" }
+  | { type: "SET_DATABASE"; payload: string }
+  | { type: "CLEAR_DATABASE" };
 
 interface ChatContextType {
   state: ChatState;
@@ -85,6 +88,10 @@ const chatReducer = (state: ChatState, action: ChatAction): ChatState => {
       return { ...state, route: action.payload };
     case "CLEAR_ROUTE":
       return { ...state, route: null };
+    case "SET_DATABASE":
+      return { ...state, database: action.payload };
+    case "CLEAR_DATABASE":
+      return { ...state, database: null };
     default:
       throw new Error(`Unhandled chat action type: ${(action as any).type}`);
   }
@@ -94,18 +101,19 @@ export const ChatProvider = ({
   children,
   initialMessages = [],
   initialThreadId = null,
-  initialToolCalls = [],
+  initialDatabase = null,
 }: {
   children: ReactNode;
   initialMessages?: ChatMessage[];
   initialThreadId?: string | null;
-  initialToolCalls?: ToolCall[];
+  initialDatabase?: string | null;
 }) => {
   const [state, dispatch] = useReducer(chatReducer, {
     messages: initialMessages,
     threadId: initialThreadId,
     route: null,
     loading: false,
+    database: initialDatabase,
   });
 
   return (

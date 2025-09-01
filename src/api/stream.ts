@@ -1,159 +1,89 @@
+import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { Application } from "../context/AppContext";
 import { ChatMessage } from "../context/ChatContext";
-import type { Hotel } from "../context/HotelContext";
-import { normalizeError } from "../lib/errors";
-
-function dispatchEvent(
-  onEvent: ((eventType: string, data: any) => void) | undefined,
-  eventType: string,
-  data: any
-) {
-  if (onEvent) onEvent(eventType, data);
-}
+import { Hotel } from "../context/HotelContext";
 
 export async function stream(
-  url: string,
   message: ChatMessage,
-  selectedHotels: Hotel[],
-  organizationId: number,
-  application: {
-    name: string;
-    description: string;
-  },
-  threadId: string | undefined,
+  url: string,
+  application: Application,
   jwt: string,
-  signal?: AbortSignal,
-  onEvent?: (eventType: string, data: any) => void
+  selectedHotels: Hotel[],
+  threadId: string | null,
+  organizationId: number,
+  database: string | null,
+  dispatch: React.Dispatch<any>,
+  signal: AbortSignal
 ) {
-  const response = await fetch(`${url}/chatbot/stream`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "text/event-stream",
-      Authorization: `Bearer ${jwt}`,
+  dispatch({ type: "ADD_MESSAGE", payload: message });
+  dispatch({ type: "CLEAR_ERROR" });
+  dispatch({ type: "SET_LOADING", payload: true });
+  dispatch({
+    type: "APPEND_TO_LAST_ASSISTANT",
+    payload: {
+      text: "",
+      role: "assistant",
+      timestamp: new Date(),
     },
-    body: JSON.stringify({
-      message,
-      selectedHotels,
-      organizationId,
-      threadId,
-      application,
-    }),
-    signal,
   });
-
-  if (!response.ok) {
-    const err = normalizeError(
-      { message: "SSE request failed", status: response.status },
-      { source: "sse" }
-    );
-    dispatchEvent(onEvent, "error", err);
-    throw err;
-  }
-
-  if (!response.body) {
-    const err = normalizeError("No response body", { source: "sse" });
-    dispatchEvent(onEvent, "error", err);
-    throw err;
-  }
-
-  dispatchEvent(onEvent, "open", null);
-
-  const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
-
-  let buffer = "";
-  let lastEventId: string | undefined;
-  let lastActivityTs = Date.now();
-
-  const HEARTBEAT_INTERVAL_MS = 30000;
-
-  const abortHandler = () => {
-    dispatchEvent(onEvent, "abort", null);
-    try {
-      reader.cancel();
-    } catch {}
-  };
-
   try {
-    if (signal) signal.addEventListener("abort", abortHandler, { once: true });
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      lastActivityTs = Date.now();
-
-      buffer += value.replace(/\r\n/g, "\n");
-
-      let sepIdx: number;
-
-      while ((sepIdx = buffer.indexOf("\n\n")) !== -1) {
-        const frame = buffer.slice(0, sepIdx);
-        buffer = buffer.slice(sepIdx + 2);
-
-        let eventType = "message";
-        const dataLines: string[] = [];
-
-        for (const rawLine of frame.split("\n")) {
-          const line = rawLine.trimEnd();
-          if (!line) {
-            continue;
-          }
-          if (line.startsWith(":")) {
-            dispatchEvent(onEvent, "heartbeat", line.slice(1).trim());
-            continue;
-          }
-
-          const colonIndex = line.indexOf(":");
-          const field = colonIndex === -1 ? line : line.slice(0, colonIndex);
-          const valuePart =
-            colonIndex === -1
-              ? ""
-              : line.slice(colonIndex + 1).replace(/^\s/, "");
-
-          switch (field) {
-            case "event":
-              eventType = valuePart || "message";
-              break;
-            case "data":
-              dataLines.push(valuePart);
-              break;
-            case "id":
-              lastEventId = valuePart;
-              break;
-            case "retry":
-              dispatchEvent(onEvent, "retry", valuePart);
-              break;
-            default:
-              break;
-          }
+    await fetchEventSource(`${url}/chatbot/stream`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "text/event-stream",
+        Authorization: `Bearer ${jwt}`,
+      },
+      body: JSON.stringify({
+        message,
+        selectedHotels,
+        organizationId,
+        threadId,
+        application,
+        database,
+      }),
+      signal,
+      onmessage: (event) => {
+        switch (event.event) {
+          case "message":
+            dispatch({
+              type: "APPEND_TO_LAST_ASSISTANT",
+              payload: {
+                text: event.data,
+                role: "assistant",
+                timestamp: new Date(),
+              },
+            });
+            break;
+          case "route":
+            dispatch({
+              type: "SET_ROUTE",
+              payload: JSON.parse(event.data),
+            });
+            break;
+          case "done":
+            const data = JSON.parse(event.data);
+            dispatch({ type: "SET_THREAD_ID", payload: data.threadId });
+            dispatch({ type: "SET_DATABASE", payload: data.database });
+            dispatch({ type: "SET_LOADING", payload: false });
+            break;
+          case "error":
+            dispatch({
+              type: "SET_ERROR",
+              payload: event.data,
+            });
+            dispatch({ type: "SET_LOADING", payload: false });
+            break;
         }
-
-        const data = dataLines.join("\n");
-        if (eventType) {
-          dispatchEvent(onEvent, eventType, data);
-        }
-      }
-
-      // Passive heartbeat watchdog: if no activity beyond threshold, notify
-      if (Date.now() - lastActivityTs > HEARTBEAT_INTERVAL_MS * 2) {
-        dispatchEvent(onEvent, "idle", null);
-        lastActivityTs = Date.now();
-      }
-    }
-  } catch (err: any) {
-    if (err?.name === "AbortError") {
-      // Already handled via abort event
-      return;
-    }
-    const normalized = normalizeError(err, { source: "sse" });
-    dispatchEvent(onEvent, "error", normalized);
-    throw normalized;
+      },
+      onerror(err) {
+        throw err;
+      },
+    });
+  } catch (error) {
+    dispatch({ type: "SET_ERROR", payload: error });
   } finally {
-    try {
-      await reader.cancel();
-    } catch {}
-    if (signal) signal.removeEventListener("abort", abortHandler);
-    // Lifecycle: close
-    dispatchEvent(onEvent, "close", lastEventId ?? null);
+    dispatch({ type: "SET_LOADING", payload: false });
+    dispatch({ type: "CLEAR_ROUTE" });
   }
 }

@@ -37,6 +37,9 @@ export default function ChatInterface({ onClose }: { onClose: () => void }) {
   } = useQuery({
     queryKey: ["getUser"],
     queryFn: () => getUser(url, organizationId, jwt),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: 1000 * 60 * 5,
   });
 
   useEffect(() => {
@@ -46,6 +49,7 @@ export default function ChatInterface({ onClose }: { onClose: () => void }) {
         payload: hotelData.hotels,
       });
       hotelDispatch({ type: "CLEAR_SELECTED_HOTELS" });
+      chatDispatch({ type: "SET_DATABASE", payload: hotelData.database });
     }
   }, [hotelData, hotelDispatch]);
 

@@ -1,7 +1,7 @@
 import { SendHorizonal, CircleStopIcon } from "lucide-react";
 import HotelSelector from "../HotelSelector";
 import styles from "./ChatComposer.module.css";
-import { FormEvent, useRef, useState, useCallback } from "react";
+import { FormEvent, useRef, useState } from "react";
 import Button from "../Button";
 import { useAppState } from "../../context/useAppState";
 import { ChatMessage } from "../../context/ChatContext";
@@ -19,127 +19,35 @@ export default function ChatComposer() {
     url,
     application,
     jwt,
+    database,
     chatDispatch,
     loading,
   } = useAppState();
 
   const canSend = text.trim().length > 0;
 
-  const startStream = useCallback(
-    async (message: ChatMessage) => {
-      chatDispatch({ type: "CLEAR_ERROR" });
-      chatDispatch({ type: "SET_LOADING", payload: true });
-      const controller = new AbortController();
-      controllerRef.current = controller;
-
-      chatDispatch({
-        type: "ADD_MESSAGE",
-        payload: { role: "assistant", text: "", timestamp: new Date() },
-      });
-
-      const handleEvent = (eventType: string, data: any) => {
-        switch (eventType) {
-          case "open":
-            break;
-          case "message":
-            chatDispatch({
-              type: "APPEND_TO_LAST_ASSISTANT",
-              payload: {
-                text: data,
-                role: "assistant",
-                timestamp: new Date(),
-              },
-            });
-            break;
-          case "route":
-            try {
-              chatDispatch({
-                type: "SET_ROUTE",
-                payload: JSON.parse(data),
-              });
-            } catch (e) {
-              console.error("Failed to parse route payload", e, data);
-            }
-
-            break;
-          case "done":
-            chatDispatch({ type: "SET_THREAD_ID", payload: data });
-            chatDispatch({ type: "SET_LOADING", payload: false });
-            break;
-          case "error":
-            chatDispatch({
-              type: "SET_ERROR",
-              payload:
-                typeof data === "object" && data?.message
-                  ? data.message
-                  : "Stream error",
-            });
-            chatDispatch({ type: "SET_LOADING", payload: false });
-            break;
-          case "abort":
-            break;
-          case "close":
-            chatDispatch({ type: "SET_LOADING", payload: false });
-            break;
-          case "heartbeat":
-          case "retry":
-          case "idle":
-          default:
-            break;
-        }
-      };
-
-      try {
-        await stream(
-          url,
-          message,
-          selectedHotels,
-          organizationId!,
-          application,
-          threadId!,
-          jwt,
-          controller.signal,
-          handleEvent
-        );
-      } catch (err: any) {
-        if (err?.name !== "AbortError") {
-          chatDispatch({
-            type: "SET_ERROR",
-            payload: `Failed to send message: ${
-              err instanceof Error ? err.message : "Unknown error"
-            }`,
-          });
-        }
-      } finally {
-        controllerRef.current = null;
-        chatDispatch({ type: "CLEAR_ROUTE" });
-        chatDispatch({ type: "SET_LOADING", payload: false });
-      }
-    },
-    [
-      application,
-      chatDispatch,
-      organizationId,
-      selectedHotels,
-      threadId,
-      url,
-      jwt,
-    ]
-  );
-
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const payload: ChatMessage = {
+    const message: ChatMessage = {
       role: "user",
       text: text.trim(),
       timestamp: new Date(),
     };
     if (!loading && canSend) {
-      chatDispatch({
-        type: "ADD_MESSAGE",
-        payload,
-      });
-      startStream(payload);
+      // Create a new controller for each request
+      controllerRef.current = new AbortController();
+      stream(
+        message,
+        url,
+        application,
+        jwt,
+        selectedHotels,
+        threadId,
+        organizationId,
+        database,
+        chatDispatch,
+        controllerRef.current.signal
+      );
       setText("");
       if (inputRef.current) {
         inputRef.current.style.height = "auto";
@@ -149,10 +57,8 @@ export default function ChatComposer() {
   }
 
   function handleAbort() {
-    const controller = controllerRef.current;
-    if (controller) {
-      controller.abort();
-      controllerRef.current = null;
+    if (controllerRef.current) {
+      controllerRef.current.abort();
     }
   }
 

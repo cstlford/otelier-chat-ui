@@ -11,6 +11,7 @@ export const useAppState = () => {
     // Chat state
     messages: chat.state.messages,
     threadId: chat.state.threadId,
+    database: chat.state.database,
     route: chat.state.route,
     loading: chat.state.loading,
     error: chat.state.error,
