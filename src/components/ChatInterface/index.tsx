@@ -48,7 +48,7 @@ export default function ChatInterface({ onClose }: { onClose: () => void }) {
         type: "SET_HOTELS",
         payload: hotelData.hotels,
       });
-      hotelDispatch({ type: "CLEAR_SELECTED_HOTELS" });
+      hotelDispatch({ type: "SET_SELECTED_HOTELS", payload: hotelData.hotels });
       chatDispatch({ type: "SET_DATABASE", payload: hotelData.database });
     }
   }, [hotelData, hotelDispatch]);

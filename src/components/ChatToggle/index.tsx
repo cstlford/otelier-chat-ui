@@ -10,13 +10,11 @@ export default function ChatToggle() {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className={styles.chatToggle}>
-      <div
-        className={`${styles.chatContainer} ${
-          isOpen ? styles.open : styles.closed
-        }`}
-      >
-        <ChatInterface onClose={() => setIsOpen(false)} />
-      </div>
+      {isOpen && (
+        <div className={styles.chatContainer}>
+          <ChatInterface onClose={() => setIsOpen(false)} />
+        </div>
+      )}
 
       <div
         className={styles.toggleButton}

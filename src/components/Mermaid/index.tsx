@@ -17,7 +17,7 @@ export default function MermaidDiagram({ code }: { code: string }) {
         })
         .catch((error: Error) => {
           if (ref.current) {
-            ref.current.innerHTML = `<pre>Error rendering diagram: ${error.message}</pre>`;
+            ref.current.innerHTML = `<pre>Error rendering diagram</pre>`;
           }
         });
     }

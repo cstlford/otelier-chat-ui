@@ -1,7 +1,7 @@
 import { SendHorizonal, CircleStopIcon } from "lucide-react";
 import HotelSelector from "../HotelSelector";
 import styles from "./ChatComposer.module.css";
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Button from "../Button";
 import { useAppState } from "../../context/useAppState";
 import { ChatMessage } from "../../context/ChatContext";
@@ -26,6 +26,10 @@ export default function ChatComposer() {
 
   const canSend = text.trim().length > 0;
 
+  useEffect(() => {
+    setTimeout(() => inputRef.current?.focus(), 0);
+  }, []);
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const message: ChatMessage = {
@@ -34,7 +38,6 @@ export default function ChatComposer() {
       timestamp: new Date(),
     };
     if (!loading && canSend) {
-      // Create a new controller for each request
       controllerRef.current = new AbortController();
       stream(
         message,

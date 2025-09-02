@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import Otelia from "../src/otelia";
+import Othelia from "../src/othelia";
 
 const meta = {
   title: "Example/Othelia Interface",
-  component: Otelia,
+  component: Othelia,
   tags: ["autodocs"],
-} satisfies Meta<typeof Otelia>;
+} satisfies Meta<typeof Othelia>;
 
 export default meta;
 
@@ -33,7 +33,7 @@ export const Primary: Story = {
         padding: "1rem",
       }}
     >
-      <Otelia {...args} />
+      <Othelia {...args} />
     </div>
   ),
 };

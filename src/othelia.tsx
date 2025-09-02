@@ -5,7 +5,7 @@ import { RootProvider } from "./context/RootProvider";
 
 const queryClient = new QueryClient();
 
-export default function Otelia({
+export default function Othelia({
   url,
   application,
   organizationId,

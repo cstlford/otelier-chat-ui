@@ -22,20 +22,6 @@
   transform-origin: bottom right;
 }
 
-.chatContainer.open {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.chatContainer.closed {
-  opacity: 0;
-  transform: translateY(10px) scale(0.95);
-  visibility: hidden;
-  pointer-events: none;
-}
-
 .icon {
   width: 3.5rem;
   cursor: pointer;
