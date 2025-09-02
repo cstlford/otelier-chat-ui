@@ -27,7 +27,7 @@ export async function stream(
     },
   });
   try {
-    await fetchEventSource(`${url}/chatbot/stream`, {
+    await fetchEventSource(`${url}/api/chatbot/stream`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

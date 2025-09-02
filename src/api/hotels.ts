@@ -6,7 +6,7 @@ export async function getUser(
   jwt: string
 ) {
   try {
-    const response = await fetch(`${url}/user/${organizationId}`, {
+    const response = await fetch(`${url}/api/user/${organizationId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

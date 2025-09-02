@@ -6,7 +6,7 @@ export default async function newThread(
   jwt: string
 ): Promise<NewThreadResponse> {
   try {
-    const response = await fetch(`${url}/chatbot/new-thread`, {
+    const response = await fetch(`${url}/api/chatbot/new-thread`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

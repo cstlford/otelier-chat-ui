@@ -4,18 +4,33 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "author": "Castle Ford",
-  "license": "ISC",
+  "license": "MIT",
   "description": "",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "build": "tsc"
+    "clean": "rimraf dist",
+    "build:ts": "tsc",
+    "build:css": "copyfiles -u 1 \"src/**/*.module.css\" dist",
+    "build:assets": "copyfiles -u 1 \"src/assets/**/*\" dist",
+    "build": "npm run clean && npm run build:ts && npm run build:css && npm run build:assets",
+    "storybook": "storybook dev -p 6006"
   },
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
-    "@tanstack/react-query": "^5.85.3",
     "lucide-react": "^0.540.0",
     "mermaid": "^11.10.0",
     "react-draggable": "^4.5.0",
@@ -25,17 +40,21 @@
     "remark-gfm": "^4.0.1"
   },
   "peerDependencies": {
+    "@tanstack/react-query": "^5.85.3",
     "react": "^18 || ^19",
     "react-dom": "^18 || ^19"
   },
   "devDependencies": {
     "@storybook/react-vite": "^9.1.2",
+    "@tanstack/react-query": "^5.85.3",
     "@types/node": "^24.3.0",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "copyfiles": "^2.4.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "rimraf": "^6.0.1",
     "storybook": "^9.1.2",
     "typescript": "^5.9.2"
   }

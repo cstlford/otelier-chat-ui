@@ -9,6 +9,7 @@
   width: fit-content;
   overflow-wrap: break-word;
   word-break: break-word;
+  text-align: left;
 }
 
 .user {
@@ -40,7 +41,9 @@
 .img {
   max-width: 100%;
   border-radius: 12px;
+  border: 1px solid #4677a8;
   display: block;
+  margin: 4px 0;
 }
 
 .downloadButton {

@@ -13,7 +13,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    url: "http://localhost:8000/api",
+    url: "http://localhost:8000",
     application: {
       name: "IntelliSight",
       description:

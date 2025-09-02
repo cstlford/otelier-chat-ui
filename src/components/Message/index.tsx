@@ -166,7 +166,8 @@ export default function Message({
             li: ({ children }) => (
               <li className={styles.listItem}>{children}</li>
             ),
-            code({ node, inline, className, children, ...props }) {
+            code(props: any) {
+              const { node, inline, className, children, ...rest } = props;
               const match = /language-(\w+)/.exec(className || "");
               if (!inline && match && match[1] === "mermaid") {
                 return (
@@ -175,10 +176,10 @@ export default function Message({
               }
               return !inline && match ? (
                 <SyntaxHighlighter
-                  style={a11yDark}
+                  style={a11yDark as any}
                   language={match[1]}
                   PreTag="div"
-                  {...props}
+                  {...rest}
                 >
                   {String(children).replace(/\n$/, "")}
                 </SyntaxHighlighter>
