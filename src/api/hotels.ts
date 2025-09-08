@@ -6,13 +6,16 @@ export async function getUser(
   jwt: string
 ) {
   try {
-    const response = await fetch(`${url}/api/user/${organizationId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
-      },
-    });
+    const response = await fetch(
+      `${url}/api/organizations/${organizationId}/users/me`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
+    );
     if (!response.ok) {
       const text = await response.text().catch(() => "");
       throw normalizeError(

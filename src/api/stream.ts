@@ -11,7 +11,6 @@ export async function stream(
   selectedHotels: Hotel[],
   threadId: string | null,
   organizationId: number,
-  database: string | null,
   dispatch: React.Dispatch<any>,
   signal: AbortSignal
 ) {
@@ -40,7 +39,6 @@ export async function stream(
         organizationId,
         threadId,
         application,
-        database,
       }),
       signal,
       onmessage: (event) => {
@@ -64,7 +62,6 @@ export async function stream(
           case "done":
             const data = JSON.parse(event.data);
             dispatch({ type: "SET_THREAD_ID", payload: data.threadId });
-            dispatch({ type: "SET_DATABASE", payload: data.database });
             dispatch({ type: "SET_LOADING", payload: false });
             break;
           case "error":

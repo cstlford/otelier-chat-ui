@@ -19,7 +19,6 @@ export default function ChatComposer() {
     url,
     application,
     jwt,
-    database,
     chatDispatch,
     loading,
   } = useAppState();
@@ -47,7 +46,6 @@ export default function ChatComposer() {
         selectedHotels,
         threadId,
         organizationId,
-        database,
         chatDispatch,
         controllerRef.current.signal
       );
