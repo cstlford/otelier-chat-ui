@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Download } from "lucide-react";
+import { TableWrapper, THead, TBody, TR, TH, TD } from "../Markdown/Table";
 import { downloadImage } from "../../lib/downloads";
 import styles from "../Message/Message.module.css";
 
@@ -62,7 +62,12 @@ const parseCSV = (text: string): string[][] => {
   return rows;
 };
 
-export default function CSVTable({ csvUrl }: { csvUrl: string }) {
+type Props = {
+  csvUrl: string;
+  maxRows?: number; // max data rows to display (excludes header)
+};
+
+export default function CSVTable({ csvUrl, maxRows = 20 }: Props) {
   const [rows, setRows] = useState<string[][] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -92,42 +97,38 @@ export default function CSVTable({ csvUrl }: { csvUrl: string }) {
 
   const header = rows[0] ?? [];
   const body = rows.slice(1);
+  const limit = Math.max(1, maxRows);
+  const limited = body.length > limit;
+  const visibleBody = limited ? body.slice(0, limit) : body;
 
   return (
-    <div className={styles.tableWrapper}>
-      <div className={styles.tableToolbar}>
-        <button
-          className={styles.downloadButton}
-          onClick={() => {
-            downloadImage(csvUrl, `table-${Date.now()}.csv`);
-          }}
-          title="Download as CSV"
-        >
-          <Download size={16} />
-        </button>
-      </div>
-      <table className={styles.table}>
-        <thead className={styles.tableHead}>
-          <tr className={styles.tableRow}>
+    <>
+      <TableWrapper
+        onDownload={() => downloadImage(csvUrl, `table-${Date.now()}.csv`)}
+      >
+        <THead>
+          <TR>
             {header.map((h, idx) => (
-              <th key={idx} className={styles.tableHeader}>
-                {h}
-              </th>
+              <TH key={idx}>{h}</TH>
             ))}
-          </tr>
-        </thead>
-        <tbody className={styles.tableBody}>
-          {body.map((r, ri) => (
-            <tr key={ri} className={styles.tableRow}>
+          </TR>
+        </THead>
+        <TBody>
+          {visibleBody.map((r, ri) => (
+            <TR key={ri}>
               {r.map((c, ci) => (
-                <td key={ci} className={styles.tableCell}>
-                  {c}
-                </td>
+                <TD key={ci}>{c}</TD>
               ))}
-            </tr>
+            </TR>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TBody>
+      </TableWrapper>
+      {limited && (
+        <div style={{ padding: "8px 0" }}>
+          Showing first {limit.toLocaleString()} of{" "}
+          {body.length.toLocaleString()} rows.
+        </div>
+      )}
+    </>
   );
 }

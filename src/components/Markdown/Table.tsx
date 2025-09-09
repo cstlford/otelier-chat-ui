@@ -2,13 +2,22 @@ import { Download } from "lucide-react";
 import { downloadTableAsCSV } from "../../lib/downloads";
 import styles from "../Message/Message.module.css";
 
-export function TableWrapper({ children }: any) {
+type TableWrapperProps = {
+  children: any;
+  onDownload?: () => void;
+};
+
+export function TableWrapper({ children, onDownload }: TableWrapperProps) {
   return (
     <div className={styles.tableWrapper}>
       <div className={styles.tableToolbar}>
         <button
           className={styles.downloadButton}
           onClick={(e) => {
+            if (onDownload) {
+              onDownload();
+              return;
+            }
             const tableElement =
               (e.currentTarget
                 .closest(`.${styles.tableWrapper}`)

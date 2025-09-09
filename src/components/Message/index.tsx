@@ -3,7 +3,6 @@ import Markdown from "../Markdown";
 import { Route, useChat } from "../../context/ChatContext";
 import RouteTool from "../RouteTool";
 import { ChatMessage } from "../../context/ChatContext";
-import { formatAsciiTable } from "../../lib/formatting";
 import styles from "./Message.module.css";
 
 type Props = {
@@ -32,13 +31,10 @@ export default function Message({
     return null;
   }
 
-  // Format the message text to handle ASCII tables
-  const formattedText = formatAsciiTable(message.text || "");
-
   return (
     <div className={styles.msgContainer}>
       <div className={`${styles.msg} ${styles[message.role]}`}>
-        <Markdown text={formattedText} />
+        <Markdown text={message.text || ""} />
         {isLast && loading && !route && (
           <span className={styles.typingDots} aria-live="polite"></span>
         )}

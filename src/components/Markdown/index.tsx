@@ -1,12 +1,12 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSanitize from "rehype-sanitize";
-import CodeBlock from "./CodeBlock";
 import LinkRenderer from "./LinkRenderer";
 import { TableWrapper, THead, TBody, TR, TH, TD } from "./Table";
 import { Download } from "lucide-react";
 import { downloadImage } from "../../lib/downloads";
 import styles from "../Message/Message.module.css";
+import MermaidDiagram from "../Mermaid";
 
 type Props = {
   text: string;
@@ -44,7 +44,19 @@ export default function Markdown({ text }: Props) {
         li: ({ children }: any) => (
           <li className={styles.listItem}>{children}</li>
         ),
-        code: CodeBlock as any,
+        code: ({ inline, className, children, ...rest }: any) => {
+          const match = /language-(\w+)/.exec(className || "");
+          if (!inline && match && match[1] === "mermaid") {
+            return (
+              <MermaidDiagram code={String(children).replace(/\n$/, "")} />
+            );
+          }
+          return (
+            <code className={className} {...rest}>
+              {children}
+            </code>
+          );
+        },
       }}
     >
       {text}
