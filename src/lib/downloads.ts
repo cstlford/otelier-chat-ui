@@ -27,8 +27,8 @@ export const downloadTableAsCSV = (
   URL.revokeObjectURL(url);
 };
 
-export const downloadImage = (imageUrl: string, filename?: string) => {
-  fetch(imageUrl)
+export const downloadURL = (url: string, filename?: string) => {
+  fetch(url)
     .then((response) => response.blob())
     .then((blob) => {
       const url = URL.createObjectURL(blob);

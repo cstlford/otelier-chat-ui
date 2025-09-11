@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TableWrapper, THead, TBody, TR, TH, TD } from "../Markdown/Table";
-import { downloadImage } from "../../lib/downloads";
+import { downloadURL } from "../../lib/downloads";
 import styles from "../Message/Message.module.css";
 
 const parseCSV = (text: string): string[][] => {
@@ -104,7 +104,7 @@ export default function CSVTable({ csvUrl, maxRows = 20 }: Props) {
   return (
     <>
       <TableWrapper
-        onDownload={() => downloadImage(csvUrl, `table-${Date.now()}.csv`)}
+        onDownload={() => downloadURL(csvUrl, `table-${Date.now()}.csv`)}
       >
         <THead>
           <TR>

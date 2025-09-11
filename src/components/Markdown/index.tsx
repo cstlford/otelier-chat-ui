@@ -4,15 +4,19 @@ import rehypeSanitize from "rehype-sanitize";
 import LinkRenderer from "./LinkRenderer";
 import { TableWrapper, THead, TBody, TR, TH, TD } from "./Table";
 import { Download } from "lucide-react";
-import { downloadImage } from "../../lib/downloads";
+import { downloadURL } from "../../lib/downloads";
 import styles from "../Message/Message.module.css";
 import MermaidDiagram from "../Mermaid";
+import { useAppState } from "../../context/useAppState";
 
 type Props = {
   text: string;
 };
 
 export default function Markdown({ text }: Props) {
+  const { url } = useAppState();
+  const normalized = (url || "").replace(/\/$/, "");
+
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -21,10 +25,19 @@ export default function Markdown({ text }: Props) {
         a: LinkRenderer as any,
         img: ({ src, alt }: any) => (
           <div className={styles.imageContainer}>
-            <img className={styles.img} src={src} alt={alt} />
+            <img
+              className={styles.img}
+              src={`${normalized}/api/chatbot/${src}`}
+              alt={alt}
+            />
             <button
               className={styles.downloadButton}
-              onClick={() => downloadImage(src || "", alt || "image")}
+              onClick={() =>
+                downloadURL(
+                  `${normalized}/api/chatbot/${src}` || "",
+                  alt || "image"
+                )
+              }
               title="Download image"
             >
               <Download size={16} />
